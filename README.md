@@ -4,3 +4,5 @@
 
 getDDNetServers() - Возвращает сервера дднет в виде [ 'ip:port' ]
 getrawDDNetServers() - Возвращает сырую инфу
+
+Лицензия MIT (./LICENSE)
