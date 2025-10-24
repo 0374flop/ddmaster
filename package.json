@@ -1,7 +1,7 @@
 {
   "name": "ddmaster",
   "version": "2.1.1",
-  "description": "",
+  "description": "Позволяет опрашивать мастер-сервер дднета",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +9,7 @@
   "keywords": [
     "DDNet"
   ],
-  "author": "",
+  "author": "0374flop",
   "license": "MIT",
   "type": "commonjs"
 }
