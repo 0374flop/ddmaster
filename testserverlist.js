@@ -1,58 +1,37 @@
-async function getDDNetServers() {
-  try {
-      const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json');
-      if (!response.ok) {
-          throw new Error(`Ошибка при запросе: ${response.status}`);
-      }
-      const data = await response.json();
-
-      const targetNick = 'tee'; 
-      let found = false;
-      data.servers.forEach(server => {
-          server.info.clients.forEach(player => {
-              if (player.name.includes(targetNick)) {
-                  console.log(`\nНашёл ${targetNick} на сервере ${server.info.name} (${server.addresses[0]}), карта: ${server.info.map.name}`);
-                  found = true;
-              }
-          });
-      });
-      if (!found) {
-          console.log(`\nИгрок ${targetNick} не найден.`);
-      }
-  } catch (error) {
-      console.error('Ошибка:', error);
-  }
+async function getrawDDNetServers() {
+  	try {
+      	const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json');
+      	if (!response.ok) {
+          	throw new Error(`Ошибка при запросе: ${response.status}`);
+      	}
+    	const data = await response.json();
+		return data;
+    } catch (error) {
+        console.error(error);
+		return null;
+    }
 }
 
-async function getAllDDNetServersIPv4WithPorts() {
-  try {
-    const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json');
-    if (!response.ok) throw new Error(`Ошибка при запросе: ${response.status}`);
+async function getDDNetServers() {
+  	try {
+    	const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json');
+    	if (!response.ok) throw new Error(`Ошибка при запросе: ${response.status}`);
 
-    const { servers } = await response.json();
-    const ipv4WithPorts = [];
+    	const { servers } = await response.json();
+    	const ipv4WithPorts = [];
 
-    for (const server of servers) {
-      server.addresses.forEach(addr => {
-        // ищем только IPv4 с портом
-        const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
-        if (match) ipv4WithPorts.push(match[1]);
-      });
-    }
-
-    // убираем дубли
-    return [...new Set(ipv4WithPorts)];
+    	for (const server of servers) {
+      		server.addresses.forEach(addr => {
+        		// ищем только IPv4 с портом
+        		const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
+        		if (match) ipv4WithPorts.push(match[1]);
+      		});
+    	}
+    	return [...new Set(ipv4WithPorts)];
   } catch (err) {
     console.error('Ошибка:', err.message);
     return [];
   }
 }
 
-// Использование:
-if (require.main === module) getAllDDNetServersIPv4WithPorts().then(addresses => {
-  const fs = require('fs');
-  fs.writeFileSync('servers.json', JSON.stringify(addresses, null, 2), 'utf-8');
-  console.log('Список серверов сохранён в servers.txt');
-});
-
-module.exports = { getAllDDNetServersIPv4WithPorts }
+module.exports = { getDDNetServers, getrawDDNetServers }
