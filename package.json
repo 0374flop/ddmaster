@@ -1,6 +1,6 @@
 {
   "name": "ddmaster",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Позволяет опрашивать мастер-сервер дднета",
   "main": "index.js",
   "scripts": {
