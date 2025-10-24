@@ -1,9 +1,11 @@
+/**
+ * Делает запрос на мастер сервер ДДНета.
+ * @returns Сервера ДДНета но в сыром виде.
+ */
 async function getrawDDNetServers() {
   	try {
       	const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json');
-      	if (!response.ok) {
-          	throw new Error(`Ошибка при запросе: ${response.status}`);
-      	}
+      	if (!response.ok) throw new Error(`Ошибка при запросе: ${response.status}`);
     	const data = await response.json();
 		return data;
     } catch (error) {
@@ -12,6 +14,10 @@ async function getrawDDNetServers() {
     }
 }
 
+/**
+ * Делает запрос на мастер сервер ДДНета.
+ * @returns Сервера ДДНета если все пошло хорошо.
+ */
 async function getDDNetServers() {
   	try {
     	const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json');
@@ -22,7 +28,6 @@ async function getDDNetServers() {
 
     	for (const server of servers) {
       		server.addresses.forEach(addr => {
-        		// ищем только IPv4 с портом
         		const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
         		if (match) ipv4WithPorts.push(match[1]);
       		});
