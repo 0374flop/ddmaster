@@ -49,9 +49,8 @@ async function getAllDDNetServersIPv4WithPorts() {
 }
 
 // Использование:
-const fs = require('fs');
-
 if (require.main === module) getAllDDNetServersIPv4WithPorts().then(addresses => {
+  const fs = require('fs');
   fs.writeFileSync('servers.json', JSON.stringify(addresses, null, 2), 'utf-8');
   console.log('Список серверов сохранён в servers.txt');
 });
