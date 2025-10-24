@@ -16,7 +16,7 @@ async function getrawDDNetServers() {
 
 /**
  * Делает запрос на мастер сервер ДДНета.
- * @returns Сервера ДДНета если все пошло хорошо.
+ * @returns Сервера ДДНета если все пошло хорошо. ['ip:port']
  */
 async function getDDNetServers() {
   	try {
