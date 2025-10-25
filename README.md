@@ -7,6 +7,9 @@ getrawDDNetServers() - Возвращает сырую инфу
 
 Лицензия MIT (./LICENSE)
 
+npm i ddmaster
+const ddmaster = require('ddmaster');
+
 
 getrawDDNetServers() пример
 [{

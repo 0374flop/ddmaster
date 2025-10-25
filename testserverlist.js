@@ -15,6 +15,16 @@ async function getrawDDNetServers() {
 }
 
 /**
+ * 
+ * @param {string} addr - берёт примерно такое "tw-0.7+udp://152.89.254.27:8310"
+ * @returns {string|null} 152.89.254.27:8310 возвращает чистый адрес (если addr не валидный то null)
+ */
+function convertudptw(addr = 'string') {
+	const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
+	return match[1];
+}
+
+/**
  * Делает запрос на мастер сервер ДДНета.
  * @returns Сервера ДДНета если все пошло хорошо. ['ip:port']
  */
@@ -28,8 +38,7 @@ async function getDDNetServers() {
 
     	for (const server of servers) {
       		server.addresses.forEach(addr => {
-        		const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
-        		if (match) ipv4WithPorts.push(match[1]);
+				ipv4WithPorts.push(convertudptw(addr));
       		});
     	}
     	return [...new Set(ipv4WithPorts)];
@@ -39,4 +48,4 @@ async function getDDNetServers() {
   }
 }
 
-module.exports = { getDDNetServers, getrawDDNetServers }
+module.exports = { getDDNetServers, getrawDDNetServers, convertudptw }
