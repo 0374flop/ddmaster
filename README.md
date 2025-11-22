@@ -4,6 +4,14 @@
 
 getDDNetServers() - Возвращает сервера дднет в виде [ 'ip:port' ]
 getrawDDNetServers() - Возвращает сырую инфу
+convertudptw(addr) - берет что-то типа "tw-0.6+udp://203.86.233.50:8352" и возвращает просто "айпи:порт"
+вот код етой штуки
+"
+  function convertudptw(addr = 'string') {
+    const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
+    return match[1];
+  }
+"
 
 Лицензия MIT (./LICENSE)
 
