@@ -19,9 +19,10 @@ async function getrawDDNetServers() {
  * @param {string} addr - берёт примерно такое "tw-0.7+udp://152.89.254.27:8310"
  * @returns {string|null} 152.89.254.27:8310 возвращает чистый адрес (если addr не валидный то null)
  */
-function convertudptw(addr = 'string') {
+function convertudptw(addr) {
+    if (typeof addr !== 'string') return null;
     const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
-    return match[1];
+    return match ? match[1] : null;
 }
 
 /**
@@ -31,21 +32,62 @@ function convertudptw(addr = 'string') {
  */
 async function getDDNetServers(data = null) {
     try {
-        const servers = data ? data.servers : (await getrawDDNetServers()).servers;
+        const servers = data || (await getrawDDNetServers()).servers;
         if (!servers) return [];
 
         const ipv4WithPorts = [];
 
         for (const server of servers) {
             server.addresses.forEach(addr => {
-                ipv4WithPorts.push(convertudptw(addr));
+				const converted = convertudptw(addr);
+				if (converted == null) return;
+                ipv4WithPorts.push(converted);
             });
         }
         return [...new Set(ipv4WithPorts)];
     } catch (err) {
-        console.error('Ошибка:', err.message);
+        console.error('Ошибка getDDNetServers:', err.message);
         return [];
     }
 }
 
-module.exports = { getDDNetServers, getrawDDNetServers, convertudptw }
+/**
+ * Ищет игрока по имени на всех серверах ДДНета.
+ * Возвращает ПОЛНУЮ инфу о серверах (как getrawDDNetServers),
+ * но только те сервера, где есть игрок с таким именем.
+ *
+ * @param {string} playerName - имя игрока, ищется строго через ===
+ * @param {Object|null} data - опционально, сырая data от getrawDDNetServers().
+ * @returns {Promise<Array>} Массив серверов (как в getrawDDNetServers().servers),
+ * на которых найден игрок.
+ */
+async function findDDNetPlayerByName(playerName, data = null) {
+    if (typeof playerName !== 'string') {
+        throw new TypeError('playerName должен быть строкой');
+    }
+
+    try {
+        const raw = data || await getrawDDNetServers();
+        if (!raw || !Array.isArray(raw.servers)) return [];
+
+        const resultServers = [];
+
+        for (const server of raw.servers) {
+            const info = server.info;
+            if (!info || !Array.isArray(info.clients)) continue;
+
+            const hasPlayer = info.clients.some(client => client.name === playerName);
+            if (hasPlayer) {
+                resultServers.push(server);
+            }
+        }
+
+		let servers = resultServers;
+        return servers;
+    } catch (err) {
+        console.error('Ошибка при поиске игрока:', err);
+        return [];
+    }
+}
+
+module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName };
