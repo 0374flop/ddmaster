@@ -2,18 +2,20 @@
 позже добавлю другие функции, сейчас пока что только получение сырой инфы и список серверов.
 Пакет зделан чтобы проще работать с ДДНет серверами.
 
-getDDNetServers() - Возвращает сервера дднет в виде [ 'ip:port' ]
+getDDNetServers() - Возвращает сервера дднет в виде [ 'ip:port' ], принимает второй параметер data. (getrawDDNetServers)
 getrawDDNetServers() - Возвращает сырую инфу
 convertudptw(addr) - берет что-то типа "tw-0.6+udp://203.86.233.50:8352" и возвращает просто "айпи:порт"
 вот код етой штуки
 "
-  function convertudptw(addr = 'string') {
+function convertudptw(addr) {
+    if (typeof addr !== 'string') return null;
     const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
-    return match[1];
-  }
+    return match ? match[1] : null;
+}
 "
-findDDNetPlayerByName(name) - штука которая возвращает примерно ту же raw дату, но отфильтровано где есть нужный игрок.
-
+findDDNetPlayerByName(name) - штука которая возвращает примерно ту же raw дату (как у getrawDDNetServers),
+но отфильтровано где есть нужный игрок. 
+Так же можно передавать data как второй параметр, тоесть типа findDDNetPlayerByName(playerName, data) и data тут со структорой как у getrawDDNetServers.
 
 Лицензия MIT (./LICENSE)
 
