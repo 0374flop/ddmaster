@@ -1,7 +1,7 @@
 /**
  * ddmaster
  */
-const lib = require('./testserverlist');
+const lib = require('./serverlist');
 // по моему такое декларирование не работает.
 
 module.exports = lib;

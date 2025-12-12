@@ -1,3 +1,14 @@
+if (typeof fetch === 'undefined') {
+    try {
+        require.resolve('node-fetch');
+    } catch (e) {
+        throw new Error('Node.js <18, npm install node-fetch');
+    }
+
+    const nodeFetch = require('node-fetch');
+    global.fetch = nodeFetch.default || nodeFetch;
+}
+
 /**
  * Делает запрос на мастер сервер ДДНета.
  * @returns Сервера ДДНета но в сыром виде.
@@ -81,9 +92,7 @@ async function findDDNetPlayerByName(playerName, data = null) {
                 resultServers.push(server);
             }
         }
-
-		let servers = resultServers;
-        return servers;
+        return resultServers;
     } catch (err) {
         console.error('Ошибка при поиске игрока:', err);
         return [];
