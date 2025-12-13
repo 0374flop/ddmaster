@@ -115,4 +115,4 @@ async function findDDNetPlayerByName(playerName, data = null) {
     }
 }
 
-module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName };
+module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName, loger };
