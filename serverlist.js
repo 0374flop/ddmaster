@@ -1,12 +1,21 @@
+// 0374flop, MIT License
+
+"use strict";
+
+const DebugLoger = require('loger0374');
+const loger = new DebugLoger('ddmaster', false, true, null, true);
+
 if (typeof fetch === 'undefined') {
     try {
         require.resolve('node-fetch');
+        loger.log('Using node-fetch polyfill');
     } catch (e) {
         throw new Error('Node.js <18, npm install node-fetch');
     }
 
     const nodeFetch = require('node-fetch');
     global.fetch = nodeFetch.default || nodeFetch;
+    loger.log('Polyfilled fetch with node-fetch');
 }
 
 /**
@@ -20,7 +29,7 @@ async function getrawDDNetServers() {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error(error);
+        loger.error(error);
         return null;
     }
 }
@@ -33,6 +42,7 @@ async function getrawDDNetServers() {
 function convertudptw(addr) {
     if (typeof addr !== 'string') return null;
     const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
+    loger.log('convertudptw', addr, '->', match ? match[1] : null);
     return match ? match[1] : null;
 }
 
@@ -44,7 +54,10 @@ function convertudptw(addr) {
 async function getDDNetServers(data = null) {
     try {
         const servers = data || (await getrawDDNetServers()).servers;
-        if (!servers) return [];
+        if (!servers) {
+            loger.error('Нет серверов в данных');
+            return [];
+        }
 
         const ipv4WithPorts = [];
 
@@ -57,7 +70,7 @@ async function getDDNetServers(data = null) {
         }
         return [...new Set(ipv4WithPorts)];
     } catch (err) {
-        console.error('Ошибка getDDNetServers:', err.message);
+        loger.error('Ошибка getDDNetServers:', err.message);
         return [];
     }
 }
@@ -79,7 +92,10 @@ async function findDDNetPlayerByName(playerName, data = null) {
 
     try {
         const raw = data || await getrawDDNetServers();
-        if (!raw || !Array.isArray(raw.servers)) return [];
+        if (!raw || !Array.isArray(raw.servers)) {
+            loger.error('Некорректные данные серверов');
+            return [];
+        }
 
         const resultServers = [];
 
@@ -94,7 +110,7 @@ async function findDDNetPlayerByName(playerName, data = null) {
         }
         return resultServers;
     } catch (err) {
-        console.error('Ошибка при поиске игрока:', err);
+        loger.error('Ошибка при поиске игрока:', err);
         return [];
     }
 }
