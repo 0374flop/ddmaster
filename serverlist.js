@@ -1,4 +1,5 @@
-// 0374flop, MIT License
+// 0374flop MIT
+// npm i ddmaster
 
 "use strict";
 
@@ -115,4 +116,16 @@ async function findDDNetPlayerByName(playerName, data = null) {
     }
 }
 
-module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName, loger };
+function filterbycommunity(servers, community) {
+    return servers.filter(server => server.community === community);
+}
+
+function filterbylocation(servers, location) {
+    return servers.filter(server => server.location?.toLowerCase() === location?.toLowerCase());
+}
+
+function filterbylocationincludes(servers, location) {
+    return servers.filter(server => server.location?.toLowerCase().includes(location?.toLowerCase()));
+}
+
+module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName, filterbycommunity, filterbylocation, filterbylocationincludes, loger };

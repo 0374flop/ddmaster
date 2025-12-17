@@ -2,6 +2,11 @@
 позже добавлю другие функции, сейчас пока что только получение сырой инфы и список серверов.
 Пакет зделан чтобы проще работать с ДДНет серверами.
 
+зделал я 0374flop
+
+npm i ddmaster
+ето скачать.
+
 getDDNetServers() - Возвращает сервера дднет в виде [ 'ip:port' ], принимает второй параметер data. (getrawDDNetServers)
 getrawDDNetServers() - Возвращает сырую инфу
 convertudptw(addr) - берет что-то типа "tw-0.6+udp://203.86.233.50:8352" и возвращает просто "айпи:порт"
@@ -10,6 +15,7 @@ convertudptw(addr) - берет что-то типа "tw-0.6+udp://203.86.233.50
 function convertudptw(addr) {
     if (typeof addr !== 'string') return null;
     const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
+    loger.log('convertudptw', addr, '->', match ? match[1] : null);
     return match ? match[1] : null;
 }
 "
