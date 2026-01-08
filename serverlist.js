@@ -130,7 +130,7 @@ function filterbylocationincludes(servers, location) {
 
 async function getinfoserver(address) {
     const servers = await getrawDDNetServers();
-    const server = servers.find(server => 
+    const server = servers.servers.find(server => 
         convertudptw(server.addresses[0]) === address
     );
     return server;
