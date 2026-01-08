@@ -128,4 +128,12 @@ function filterbylocationincludes(servers, location) {
     return servers.filter(server => server.location?.toLowerCase().includes(location?.toLowerCase()));
 }
 
-module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName, filterbycommunity, filterbylocation, filterbylocationincludes, loger };
+async function getinfoserver(address) {
+    const servers = await getrawDDNetServers();
+    const server = servers.find(server => 
+        convertudptw(server.addresses[0]) === address
+    );
+    return server;
+}
+
+module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName, filterbycommunity, filterbylocation, filterbylocationincludes, loger, getinfoserver };
