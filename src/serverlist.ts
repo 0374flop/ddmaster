@@ -18,7 +18,7 @@ if (typeof fetch === 'undefined') {
  * Делает запрос на мастер сервер ДДНета.
  * @returns Сервера ДДНета но в сыром виде.
  */
-async function getrawDDNetServers() {
+async function getrawDDNetServers(): Promise<{ servers: import('./types').DDNetServer[] } | null> {
     try {
         const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json');
         if (!response.ok) throw new Error(`Ошибка при запросе: ${response.status}`);
@@ -35,7 +35,7 @@ async function getrawDDNetServers() {
  * @param {string} addr - берёт примерно такое "tw-0.7+udp://152.89.254.27:8310"
  * @returns {string|null} 152.89.254.27:8310 возвращает чистый адрес (если addr не валидный то null)
  */
-function convertudptw(addr) {
+function convertudptw(addr: string) {
     if (typeof addr !== 'string') return null;
     const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
     return match ? match[1] : null;
@@ -48,15 +48,15 @@ function convertudptw(addr) {
  */
 async function getDDNetServers(data = null) {
     try {
-        const servers = data || (await getrawDDNetServers()).servers;
+        const servers = data || (await getrawDDNetServers())?.servers;
         if (!servers) {
             return [];
         }
 
-        const ipv4WithPorts = [];
+        const ipv4WithPorts: string[] = [];
 
         for (const server of servers) {
-            server.addresses.forEach(addr => {
+            server.addresses.forEach((addr: string) => {
 				const converted = convertudptw(addr);
 				if (converted == null) return;
                 ipv4WithPorts.push(converted);
@@ -79,7 +79,7 @@ async function getDDNetServers(data = null) {
  * @returns {Promise<Array>} Массив серверов (как в getrawDDNetServers().servers),
  * на которых найден игрок.
  */
-async function findDDNetPlayerByName(playerName, data = null) {
+async function findDDNetPlayerByName(playerName: string, data = null) {
     if (typeof playerName !== 'string') {
         throw new TypeError('playerName должен быть строкой');
     }
@@ -96,7 +96,7 @@ async function findDDNetPlayerByName(playerName, data = null) {
             const info = server.info;
             if (!info || !Array.isArray(info.clients)) continue;
 
-            const hasPlayer = info.clients.some(client => client.name === playerName);
+            const hasPlayer = info.clients.some((client: import('./types').ServerClient) => client.name === playerName);
             if (hasPlayer) {
                 resultServers.push(server);
             }
@@ -108,23 +108,24 @@ async function findDDNetPlayerByName(playerName, data = null) {
     }
 }
 
-function filterbycommunity(servers, community) {
+function filterbycommunity(servers: import('./types').DDNetServer[], community: string) {
     return servers.filter(server => server.community === community);
 }
 
-function filterbylocation(servers, location) {
+function filterbylocation(servers: import('./types').DDNetServer[], location: string) {
     return servers.filter(server => server.location?.toLowerCase() === location?.toLowerCase());
 }
 
-function filterbylocationincludes(servers, location) {
+function filterbylocationincludes(servers: import('./types').DDNetServer[], location: string) {
     return servers.filter(server => server.location?.toLowerCase().includes(location?.toLowerCase()));
 }
 
-async function getinfoserver(address) {
+async function getinfoserver(address: string) {
     const servers = await getrawDDNetServers();
-    const server = servers.servers.find(server => 
-        convertudptw(server.addresses[0]) === address
-    );
+    const server = servers?.servers.find((server: import('./types').DDNetServer) => {
+        if (server.addresses) return false;
+        return convertudptw(server.addresses[0]) === address;
+    });
     return server;
 }
 

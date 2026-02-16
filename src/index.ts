@@ -1,7 +1,7 @@
 /**
  * ddmaster
  */
-const lib = require('./serverlist');
+const lib = require('./serverlist.js');
 
 module.exports = lib;
 
