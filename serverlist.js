@@ -3,20 +3,15 @@
 
 "use strict";
 
-const DebugLoger = require('loger0374');
-const loger = new DebugLoger('ddmaster', false, true, null, true);
-
 if (typeof fetch === 'undefined') {
     try {
         require.resolve('node-fetch');
-        loger.log('Using node-fetch polyfill');
     } catch (e) {
         throw new Error('Node.js <18, npm install node-fetch');
     }
 
     const nodeFetch = require('node-fetch');
     global.fetch = nodeFetch.default || nodeFetch;
-    loger.log('Polyfilled fetch with node-fetch');
 }
 
 /**
@@ -30,7 +25,7 @@ async function getrawDDNetServers() {
         const data = await response.json();
         return data;
     } catch (error) {
-        loger.error(error);
+        console.error(error);
         return null;
     }
 }
@@ -43,7 +38,6 @@ async function getrawDDNetServers() {
 function convertudptw(addr) {
     if (typeof addr !== 'string') return null;
     const match = addr.match(/(\d{1,3}(\.\d{1,3}){3}:\d+)/);
-    loger.log('convertudptw', addr, '->', match ? match[1] : null);
     return match ? match[1] : null;
 }
 
@@ -56,7 +50,6 @@ async function getDDNetServers(data = null) {
     try {
         const servers = data || (await getrawDDNetServers()).servers;
         if (!servers) {
-            loger.error('Нет серверов в данных');
             return [];
         }
 
@@ -71,7 +64,7 @@ async function getDDNetServers(data = null) {
         }
         return [...new Set(ipv4WithPorts)];
     } catch (err) {
-        loger.error('Ошибка getDDNetServers:', err.message);
+        console.error(err);
         return [];
     }
 }
@@ -94,7 +87,6 @@ async function findDDNetPlayerByName(playerName, data = null) {
     try {
         const raw = data || await getrawDDNetServers();
         if (!raw || !Array.isArray(raw.servers)) {
-            loger.error('Некорректные данные серверов');
             return [];
         }
 
@@ -111,7 +103,7 @@ async function findDDNetPlayerByName(playerName, data = null) {
         }
         return resultServers;
     } catch (err) {
-        loger.error('Ошибка при поиске игрока:', err);
+        console.error(err);
         return [];
     }
 }
@@ -136,4 +128,4 @@ async function getinfoserver(address) {
     return server;
 }
 
-module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName, filterbycommunity, filterbylocation, filterbylocationincludes, loger, getinfoserver };
+module.exports = { getDDNetServers, getrawDDNetServers, convertudptw, findDDNetPlayerByName, filterbycommunity, filterbylocation, filterbylocationincludes, getinfoserver };

@@ -2,7 +2,6 @@
  * ddmaster
  */
 const lib = require('./serverlist');
-// по моему такое декларирование не работает.
 
 module.exports = lib;
 

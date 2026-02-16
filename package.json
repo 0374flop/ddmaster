@@ -12,8 +12,5 @@
   ],
   "author": "0374flop",
   "license": "MIT",
-  "type": "commonjs",
-  "dependencies": {
-    "loger0374": "^0.2.0"
-  }
+  "type": "commonjs"
 }
