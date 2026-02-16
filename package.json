@@ -12,5 +12,6 @@
   ],
   "author": "0374flop",
   "license": "MIT",
-  "type": "commonjs"
+  "type": "commonjs",
+  "bin": "./bin.js"
 }
