@@ -123,8 +123,8 @@ function filterbylocationincludes(servers: import('./types').DDNetServer[], loca
 async function getinfoserver(address: string) {
     const servers = await getrawDDNetServers();
     const server = servers?.servers.find((server: import('./types').DDNetServer) => {
-        if (server.addresses) return false;
-        return convertudptw(server.addresses[0]) === address;
+        if (!server.addresses || server.addresses.length === 0) return false;
+        return convertudptw(server.addresses[0]!) === address;
     });
     return server;
 }
