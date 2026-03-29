@@ -4,7 +4,7 @@
   "description": "Позволяет опрашивать мастер-сервер дднета",
   "main": "lib/serverlist.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublishOnly": "tsc"
   },
   "keywords": [
     "DDNet",
