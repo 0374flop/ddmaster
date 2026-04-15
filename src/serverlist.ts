@@ -12,12 +12,10 @@ export { Types };
 export async function getrawDDNetServers(): Promise<{ servers: Types.DDNetServer[] } | null> {
     try {
         const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json');
-        if (!response.ok) throw new Error(`Ошибка при запросе: ${response.status}`);
         const data = await response.json();
         return data as { servers: Types.DDNetServer[] };
     } catch (error) {
-        console.error(error);
-        return null;
+        return Promise.reject(error);
     }
 }
 
